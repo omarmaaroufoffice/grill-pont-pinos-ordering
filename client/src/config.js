@@ -5,8 +5,8 @@ const config = {
     SOCKET_URL: 'http://localhost:5000'
   },
   production: {
-    API_BASE_URL: process.env.REACT_APP_API_URL || 'https://your-app-name.onrender.com',
-    SOCKET_URL: process.env.REACT_APP_API_URL || 'https://your-app-name.onrender.com'
+    API_BASE_URL: process.env.REACT_APP_API_URL || 'https://grill-pont-pinos-ordering.onrender.com',
+    SOCKET_URL: process.env.REACT_APP_API_URL || 'https://grill-pont-pinos-ordering.onrender.com'
   }
 };
 
