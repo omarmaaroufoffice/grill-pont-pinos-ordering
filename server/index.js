@@ -194,17 +194,37 @@ app.get('/api/orders/:orderNumber', (req, res) => {
 });
 
 // Serve static files from React build in production
-if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER;
+console.log('Environment check - NODE_ENV:', process.env.NODE_ENV, 'RENDER:', process.env.RENDER, 'isProduction:', isProduction);
+
+if (isProduction) {
   const buildPath = path.join(__dirname, '../client/build');
   console.log('Looking for build files in:', buildPath);
   
-  app.use(express.static(buildPath));
-  
-  app.get('*', (req, res) => {
-    const indexPath = path.join(buildPath, 'index.html');
-    console.log('Serving index.html from:', indexPath);
-    res.sendFile(indexPath);
-  });
+  // Check if build directory exists
+  const fs = require('fs');
+  if (fs.existsSync(buildPath)) {
+    console.log('Build directory found!');
+    app.use(express.static(buildPath));
+    
+    app.get('*', (req, res) => {
+      const indexPath = path.join(buildPath, 'index.html');
+      console.log('Serving index.html from:', indexPath);
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        console.error('index.html not found at:', indexPath);
+        res.status(404).send('Frontend build not found. Please check build process.');
+      }
+    });
+  } else {
+    console.error('Build directory not found at:', buildPath);
+    app.get('*', (req, res) => {
+      res.status(404).send('Frontend build directory not found. Please check build process.');
+    });
+  }
+} else {
+  console.log('Development mode - not serving static files');
 }
 
 server.listen(PORT, () => {
