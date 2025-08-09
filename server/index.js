@@ -194,11 +194,16 @@ app.get('/api/orders/:orderNumber', (req, res) => {
 });
 
 // Serve static files from React build in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
+  const buildPath = path.join(__dirname, '../client/build');
+  console.log('Looking for build files in:', buildPath);
+  
+  app.use(express.static(buildPath));
   
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    const indexPath = path.join(buildPath, 'index.html');
+    console.log('Serving index.html from:', indexPath);
+    res.sendFile(indexPath);
   });
 }
 
