@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // URL that customers will scan to access the menu
-const menuURL = 'http://localhost:3000/';
+const menuURL = 'https://grill-pont-pinos.onrender.com/';
 
 // Generate QR code
 async function generateQRCode() {
